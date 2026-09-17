@@ -1,31 +1,30 @@
 # SQL-Real-World-Datasets
 
-Real-world datasets for **MySQL practice, database analysis, SQL problem solving, and relational database design**.
+Real-world datasets for **MySQL practice, SQL problem solving, database analysis, and relational database design**.
 
-This repository contains datasets from two different domains:
+This repository contains large datasets from two different domains:
 
 * 🛒 **Instacart** — e-commerce and grocery transactions
-* 🎬 **MovieLens** — movies, ratings, tags, and recommendation-related data
+* 🎬 **MovieLens** — movies, ratings, tags, and movie-related metadata
 
-The goal is to practice SQL on large datasets instead of small tutorial databases.
+The goal is to practice SQL using large, realistic datasets instead of small tutorial databases.
 
 ---
 
 ## 📂 Datasets
 
-### 🛒 Instacart Market Basket Analysis
+## 🛒 Instacart Market Basket Analysis
 
-The Instacart dataset represents grocery shopping activity and contains information about:
+The Instacart dataset contains grocery shopping and ordering data, including:
 
-* Customers
 * Orders
 * Products
 * Aisles
 * Departments
-* Products added to orders
+* Product-order relationships
 * Reordered products
 
-#### Files
+### Files
 
 ```text
 instacart/
@@ -37,7 +36,7 @@ instacart/
 └── products.csv
 ```
 
-#### Useful for practicing
+### Useful for practicing
 
 * `SELECT`
 * `WHERE`
@@ -57,7 +56,7 @@ instacart/
 
 ---
 
-### 🎬 MovieLens
+## 🎬 MovieLens
 
 MovieLens is a large movie-rating dataset from **GroupLens Research**.
 
@@ -70,10 +69,10 @@ The Full dataset contains approximately:
 * **14 million genome relevance scores**
 * **1,100 tags**
 
-#### Dataset files
+### Files
 
 ```text
-movielens/
+ml-latest/
 ├── movies.csv
 ├── ratings.csv
 ├── tags.csv
@@ -83,7 +82,7 @@ movielens/
 └── README.txt
 ```
 
-#### Useful for practicing
+### Useful for practicing
 
 * Multi-table `JOIN`s
 * Aggregation
@@ -98,16 +97,21 @@ movielens/
 * Recommendation-style SQL
 * Large-scale analytical queries
 
-> **MovieLens note:** The raw MovieLens files are downloaded directly from GroupLens. This repository provides the SQL practice structure and documentation rather than redistributing the raw MovieLens dataset.
+### Source
+
+MovieLens is provided by **GroupLens Research**.
 
 Official source:
+
 https://grouplens.org/datasets/movielens/
+
+Please review and follow the original dataset provider's terms and licensing requirements when using or redistributing the dataset.
 
 ---
 
 ## 🗄️ MySQL Databases
 
-The datasets are designed to be imported into MySQL 8.0+.
+The datasets are intended for use with **MySQL 8.0+**.
 
 ```text
 MySQL
@@ -118,8 +122,6 @@ MySQL
 ---
 
 ## 🧠 SQL Practice Levels
-
-The datasets will be used progressively:
 
 ### Level 1 — Basics
 
@@ -181,11 +183,11 @@ Partitioned analysis
 
 ### Level 6 — Real-World Analysis
 
-Examples include:
+Example problems include:
 
 * Most frequently ordered products
 * Most active customers
-* Reorder rates
+* Product reorder rates
 * Popular products by department
 * Average order size
 * Customer purchasing behavior
@@ -193,7 +195,7 @@ Examples include:
 * Most-rated movies
 * Ratings by genre
 * User activity analysis
-* Movie ranking by genre
+* Movie rankings by genre
 * Recommendation-style queries
 
 ---
@@ -204,7 +206,7 @@ Examples include:
 * SQL
 * Git
 * Git LFS
-* CSV datasets
+* CSV
 
 ---
 
@@ -221,23 +223,28 @@ SQL-Real-World-Datasets/
 │   ├── order_products__train.csv
 │   └── products.csv
 │
-├── movielens/
-│   ├── README.md
-│   ├── schema.sql
-│   ├── import.sql
-│   └── queries/
+├── ml-latest/
+│   ├── movies.csv
+│   ├── ratings.csv
+│   ├── tags.csv
+│   ├── links.csv
+│   ├── genome-scores.csv
+│   ├── genome-tags.csv
+│   └── README.txt
 │
 ├── .gitattributes
 └── README.md
 ```
 
+Large CSV files are managed using **Git LFS**.
+
 ---
 
 ## 🎯 Project Goal
 
-The purpose of this repository is to build practical SQL skills using **large, realistic datasets**.
+The purpose of this repository is to develop practical SQL skills by working with **millions of real-world records**.
 
-Instead of solving only small SQL exercises, the goal is to work with millions of records and understand how SQL is used for:
+The datasets can be used for:
 
 * Data analysis
 * Reporting
@@ -245,8 +252,10 @@ Instead of solving only small SQL exercises, the goal is to work with millions o
 * Transaction analysis
 * Customer analytics
 * Product analytics
-* Recommendation systems
+* Movie and rating analytics
+* Recommendation-style analysis
 * Database querying
+* SQL interview preparation
 
 ---
 
@@ -264,7 +273,7 @@ Official website:
 
 https://grouplens.org/datasets/movielens/
 
-Please follow the original dataset providers' licensing and usage terms when downloading, using, or redistributing datasets.
+Please follow the original dataset providers' terms and licensing requirements when downloading, using, or redistributing datasets.
 
 ---
 
@@ -275,10 +284,11 @@ This repository will be expanded with:
 * MySQL table schemas
 * CSV import scripts
 * SQL practice problems
-* Beginner → advanced queries
+* Beginner-to-advanced SQL queries
 * Real-world business questions
 * Query optimization examples
 * Indexing examples
 * Window-function exercises
 * CTE exercises
-* Interview-style SQL problems
+* SQL interview problems
+* Database design examples
