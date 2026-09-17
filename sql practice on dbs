@@ -1,1 +1,568 @@
+USE instacart_db;
 
+-- =========================================================
+-- INSTACART SQL PRACTICE
+-- Beginner -> Intermediate -> Advanced
+-- =========================================================
+
+
+-- =========================================================
+-- 1. BASIC QUERIES
+-- =========================================================
+
+-- 1. Show all tables
+SHOW TABLES;
+
+-- 2. View products
+SELECT *
+FROM products
+LIMIT 20;
+
+-- 3. View orders
+SELECT *
+FROM orders
+LIMIT 20;
+
+-- 4. View aisles
+SELECT *
+FROM aisles
+LIMIT 20;
+
+-- 5. View departments
+SELECT *
+FROM departments
+LIMIT 20;
+
+-- 6. Count products
+SELECT COUNT(*) AS total_products
+FROM products;
+
+-- 7. Count orders
+SELECT COUNT(*) AS total_orders
+FROM orders;
+
+-- 8. Count aisles
+SELECT COUNT(*) AS total_aisles
+FROM aisles;
+
+-- 9. Count departments
+SELECT COUNT(*) AS total_departments
+FROM departments;
+
+-- 10. Find products containing "milk"
+SELECT product_id, product_name
+FROM products
+WHERE product_name LIKE '%milk%'
+LIMIT 50;
+
+
+-- =========================================================
+-- 2. FILTERING / SORTING
+-- =========================================================
+
+-- 11. Products in a specific aisle
+SELECT *
+FROM products
+WHERE aisle_id = 1;
+
+-- 12. Products in department 1
+SELECT *
+FROM products
+WHERE department_id = 1;
+
+-- 13. Orders placed on Sunday
+-- order_dow = 0 represents Sunday in this dataset
+SELECT *
+FROM orders
+WHERE order_dow = 0
+LIMIT 50;
+
+-- 14. Orders placed between 8 AM and 10 AM
+SELECT *
+FROM orders
+WHERE order_hour_of_day BETWEEN 8 AND 10
+LIMIT 50;
+
+-- 15. First 20 products alphabetically
+SELECT product_id, product_name
+FROM products
+ORDER BY product_name
+LIMIT 20;
+
+-- 16. Last 20 products alphabetically
+SELECT product_id, product_name
+FROM products
+ORDER BY product_name DESC
+LIMIT 20;
+
+
+-- =========================================================
+-- 3. AGGREGATION
+-- =========================================================
+
+-- 17. Number of products in each department
+SELECT
+    department_id,
+    COUNT(*) AS product_count
+FROM products
+GROUP BY department_id
+ORDER BY product_count DESC;
+
+-- 18. Number of products in each aisle
+SELECT
+    aisle_id,
+    COUNT(*) AS product_count
+FROM products
+GROUP BY aisle_id
+ORDER BY product_count DESC;
+
+-- 19. Number of orders for each day of week
+SELECT
+    order_dow,
+    COUNT(*) AS total_orders
+FROM orders
+GROUP BY order_dow
+ORDER BY order_dow;
+
+-- 20. Number of orders for each hour
+SELECT
+    order_hour_of_day,
+    COUNT(*) AS total_orders
+FROM orders
+GROUP BY order_hour_of_day
+ORDER BY order_hour_of_day;
+
+-- 21. Average days between orders
+SELECT
+    AVG(days_since_prior_order) AS avg_days_between_orders
+FROM orders
+WHERE days_since_prior_order IS NOT NULL;
+
+-- 22. Maximum order number
+SELECT
+    MAX(order_number) AS max_order_number
+FROM orders;
+
+-- 23. Number of unique users
+SELECT
+    COUNT(DISTINCT user_id) AS unique_users
+FROM orders;
+
+-- 24. Number of orders per user
+SELECT
+    user_id,
+    COUNT(*) AS total_orders
+FROM orders
+GROUP BY user_id
+ORDER BY total_orders DESC
+LIMIT 20;
+
+
+-- =========================================================
+-- 4. JOINS
+-- =========================================================
+
+-- 25. Products with department names
+SELECT
+    p.product_id,
+    p.product_name,
+    d.department
+FROM products p
+JOIN departments d
+    ON p.department_id = d.department_id
+LIMIT 50;
+
+-- 26. Products with aisle names
+SELECT
+    p.product_id,
+    p.product_name,
+    a.aisle
+FROM products p
+JOIN aisles a
+    ON p.aisle_id = a.aisle_id
+LIMIT 50;
+
+-- 27. Products with aisle + department
+SELECT
+    p.product_id,
+    p.product_name,
+    a.aisle,
+    d.department
+FROM products p
+JOIN aisles a
+    ON p.aisle_id = a.aisle_id
+JOIN departments d
+    ON p.department_id = d.department_id
+LIMIT 50;
+
+-- 28. Count products by department name
+SELECT
+    d.department,
+    COUNT(p.product_id) AS product_count
+FROM departments d
+LEFT JOIN products p
+    ON d.department_id = p.department_id
+GROUP BY d.department_id, d.department
+ORDER BY product_count DESC;
+
+-- 29. Count products by aisle name
+SELECT
+    a.aisle,
+    COUNT(p.product_id) AS product_count
+FROM aisles a
+LEFT JOIN products p
+    ON a.aisle_id = p.aisle_id
+GROUP BY a.aisle_id, a.aisle
+ORDER BY product_count DESC;
+
+
+-- =========================================================
+-- 5. ORDER + PRODUCT ANALYSIS
+-- =========================================================
+
+-- 30. Most frequently ordered products
+SELECT
+    product_id,
+    COUNT(*) AS order_count
+FROM order_products_prior
+GROUP BY product_id
+ORDER BY order_count DESC
+LIMIT 20;
+
+-- 31. Most reordered products
+SELECT
+    product_id,
+    SUM(reordered) AS reorder_count
+FROM order_products_prior
+GROUP BY product_id
+ORDER BY reorder_count DESC
+LIMIT 20;
+
+-- 32. Product purchase and reorder counts
+SELECT
+    product_id,
+    COUNT(*) AS total_orders,
+    SUM(reordered) AS total_reorders,
+    ROUND(AVG(reordered) * 100, 2) AS reorder_percentage
+FROM order_products_prior
+GROUP BY product_id
+ORDER BY total_orders DESC
+LIMIT 20;
+
+-- 33. Product names with purchase counts
+SELECT
+    p.product_id,
+    p.product_name,
+    COUNT(*) AS total_orders
+FROM order_products_prior op
+JOIN products p
+    ON op.product_id = p.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY total_orders DESC
+LIMIT 20;
+
+-- 34. Product names with reorder counts
+SELECT
+    p.product_id,
+    p.product_name,
+    SUM(op.reordered) AS total_reorders
+FROM order_products_prior op
+JOIN products p
+    ON op.product_id = p.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY total_reorders DESC
+LIMIT 20;
+
+
+-- =========================================================
+-- 6. HAVING
+-- =========================================================
+
+-- 35. Users with more than 20 orders
+SELECT
+    user_id,
+    COUNT(*) AS total_orders
+FROM orders
+GROUP BY user_id
+HAVING COUNT(*) > 20
+ORDER BY total_orders DESC;
+
+-- 36. Products ordered more than 10,000 times
+SELECT
+    product_id,
+    COUNT(*) AS order_count
+FROM order_products_prior
+GROUP BY product_id
+HAVING COUNT(*) > 10000
+ORDER BY order_count DESC;
+
+-- 37. Products with reorder rate above 70%
+SELECT
+    product_id,
+    COUNT(*) AS total_orders,
+    SUM(reordered) AS total_reorders,
+    ROUND(AVG(reordered) * 100, 2) AS reorder_percentage
+FROM order_products_prior
+GROUP BY product_id
+HAVING AVG(reordered) > 0.70
+ORDER BY reorder_percentage DESC;
+
+
+-- =========================================================
+-- 7. CASE
+-- =========================================================
+
+-- 38. Classify orders by hour
+SELECT
+    order_id,
+    order_hour_of_day,
+    CASE
+        WHEN order_hour_of_day BETWEEN 6 AND 11 THEN 'Morning'
+        WHEN order_hour_of_day BETWEEN 12 AND 17 THEN 'Afternoon'
+        WHEN order_hour_of_day BETWEEN 18 AND 22 THEN 'Evening'
+        ELSE 'Night'
+    END AS time_period
+FROM orders
+LIMIT 50;
+
+-- 39. Classify reorder behavior
+SELECT
+    product_id,
+    CASE
+        WHEN reordered = 1 THEN 'Reordered'
+        ELSE 'First Purchase'
+    END AS purchase_type
+FROM order_products_prior
+LIMIT 50;
+
+
+-- =========================================================
+-- 8. SUBQUERIES
+-- =========================================================
+
+-- 40. Products ordered more than the average product order count
+SELECT
+    product_id,
+    COUNT(*) AS order_count
+FROM order_products_prior
+GROUP BY product_id
+HAVING COUNT(*) >
+(
+    SELECT AVG(product_order_count)
+    FROM
+    (
+        SELECT COUNT(*) AS product_order_count
+        FROM order_products_prior
+        GROUP BY product_id
+    ) x
+)
+ORDER BY order_count DESC;
+
+-- 41. Users with more orders than the average user
+SELECT
+    user_id,
+    COUNT(*) AS total_orders
+FROM orders
+GROUP BY user_id
+HAVING COUNT(*) >
+(
+    SELECT AVG(user_order_count)
+    FROM
+    (
+        SELECT COUNT(*) AS user_order_count
+        FROM orders
+        GROUP BY user_id
+    ) x
+)
+ORDER BY total_orders DESC;
+
+
+-- =========================================================
+-- 9. CTEs
+-- =========================================================
+
+-- 42. Top 20 products by order count
+WITH product_orders AS
+(
+    SELECT
+        product_id,
+        COUNT(*) AS order_count
+    FROM order_products_prior
+    GROUP BY product_id
+)
+SELECT
+    p.product_id,
+    p.product_name,
+    po.order_count
+FROM product_orders po
+JOIN products p
+    ON po.product_id = p.product_id
+ORDER BY po.order_count DESC
+LIMIT 20;
+
+-- 43. Reorder percentage using CTE
+WITH product_stats AS
+(
+    SELECT
+        product_id,
+        COUNT(*) AS total_orders,
+        SUM(reordered) AS total_reorders
+    FROM order_products_prior
+    GROUP BY product_id
+)
+SELECT
+    p.product_name,
+    ps.total_orders,
+    ps.total_reorders,
+    ROUND(ps.total_reorders * 100.0 / ps.total_orders, 2) AS reorder_percentage
+FROM product_stats ps
+JOIN products p
+    ON ps.product_id = p.product_id
+WHERE ps.total_orders >= 100
+ORDER BY reorder_percentage DESC
+LIMIT 20;
+
+
+-- =========================================================
+-- 10. WINDOW FUNCTIONS
+-- =========================================================
+
+-- 44. Rank products by number of orders
+WITH product_orders AS
+(
+    SELECT
+        product_id,
+        COUNT(*) AS order_count
+    FROM order_products_prior
+    GROUP BY product_id
+)
+SELECT
+    product_id,
+    order_count,
+    RANK() OVER (ORDER BY order_count DESC) AS product_rank
+FROM product_orders
+LIMIT 20;
+
+-- 45. Rank products inside each department
+WITH product_orders AS
+(
+    SELECT
+        p.product_id,
+        p.product_name,
+        p.department_id,
+        COUNT(op.product_id) AS order_count
+    FROM products p
+    JOIN order_products_prior op
+        ON p.product_id = op.product_id
+    GROUP BY
+        p.product_id,
+        p.product_name,
+        p.department_id
+)
+SELECT
+    product_id,
+    product_name,
+    department_id,
+    order_count,
+    RANK() OVER
+    (
+        PARTITION BY department_id
+        ORDER BY order_count DESC
+    ) AS department_rank
+FROM product_orders;
+
+
+-- =========================================================
+-- 11. REAL-WORLD BUSINESS QUESTIONS
+-- =========================================================
+
+-- 46. Top 10 most ordered products
+SELECT
+    p.product_name,
+    COUNT(*) AS total_orders
+FROM order_products_prior op
+JOIN products p
+    ON op.product_id = p.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY total_orders DESC
+LIMIT 10;
+
+
+-- 47. Top 10 most reordered products
+SELECT
+    p.product_name,
+    SUM(op.reordered) AS reorder_count
+FROM order_products_prior op
+JOIN products p
+    ON op.product_id = p.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY reorder_count DESC
+LIMIT 10;
+
+
+-- 48. Most popular department by number of products
+SELECT
+    d.department,
+    COUNT(p.product_id) AS product_count
+FROM departments d
+JOIN products p
+    ON d.department_id = p.department_id
+GROUP BY d.department_id, d.department
+ORDER BY product_count DESC
+LIMIT 1;
+
+
+-- 49. Most popular department by number of purchases
+SELECT
+    d.department,
+    COUNT(*) AS purchase_count
+FROM order_products_prior op
+JOIN products p
+    ON op.product_id = p.product_id
+JOIN departments d
+    ON p.department_id = d.department_id
+GROUP BY d.department_id, d.department
+ORDER BY purchase_count DESC
+LIMIT 10;
+
+
+-- 50. Most popular aisle by number of purchases
+SELECT
+    a.aisle,
+    COUNT(*) AS purchase_count
+FROM order_products_prior op
+JOIN products p
+    ON op.product_id = p.product_id
+JOIN aisles a
+    ON p.aisle_id = a.aisle_id
+GROUP BY a.aisle_id, a.aisle
+ORDER BY purchase_count DESC
+LIMIT 10;
+
+
+-- =========================================================
+-- 12. FINAL SUMMARY
+-- =========================================================
+
+SELECT 'Total Products' AS metric, COUNT(*) AS value
+FROM products
+
+UNION ALL
+
+SELECT 'Total Orders', COUNT(*)
+FROM orders
+
+UNION ALL
+
+SELECT 'Total Prior Order Items', COUNT(*)
+FROM order_products_prior
+
+UNION ALL
+
+SELECT 'Total Train Order Items', COUNT(*)
+FROM order_products_train
+
+UNION ALL
+
+SELECT 'Total Users', COUNT(DISTINCT user_id)
+FROM orders;
