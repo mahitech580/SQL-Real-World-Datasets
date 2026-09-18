@@ -1,1 +1,166 @@
 
+-- =========================================================
+-- SQL PRACTICE - DAY 1
+-- Topic: SQL Basics
+-- 7 Problems with Solutions and Explanations
+-- =========================================================
+
+
+-- ---------------------------------------------------------
+-- SETUP
+-- ---------------------------------------------------------
+
+CREATE TABLE employees (
+    id INT,
+    name VARCHAR(50),
+    age INT,
+    department VARCHAR(50),
+    salary INT
+);
+
+INSERT INTO employees VALUES
+(1, 'Rahul', 24, 'IT', 45000),
+(2, 'Priya', 26, 'HR', 40000),
+(3, 'Arjun', 23, 'IT', 50000),
+(4, 'Sneha', 27, 'Finance', 55000),
+(5, 'Kiran', 25, 'IT', 48000);
+
+
+-- =========================================================
+-- PROBLEM 1
+-- Display all employees
+-- =========================================================
+
+-- Problem:
+-- Write a query to display all columns and all employees.
+
+-- Solution:
+
+SELECT *
+FROM employees;
+
+-- Explanation:
+-- * means all columns from the employees table.
+
+
+-- =========================================================
+-- PROBLEM 2
+-- Display only employee names
+-- =========================================================
+
+-- Problem:
+-- Show only the names of all employees.
+
+-- Solution:
+
+SELECT name
+FROM employees;
+
+-- Explanation:
+-- SELECT name returns only the name column.
+
+
+-- =========================================================
+-- PROBLEM 3
+-- Find employees from IT department
+-- =========================================================
+
+-- Problem:
+-- Display employees who work in the IT department.
+
+-- Solution:
+
+SELECT *
+FROM employees
+WHERE department = 'IT';
+
+-- Explanation:
+-- WHERE is used to filter records.
+-- Only employees whose department is IT are returned.
+
+
+-- =========================================================
+-- PROBLEM 4
+-- Find employees earning more than 45000
+-- =========================================================
+
+-- Problem:
+-- Display employees whose salary is greater than 45000.
+
+-- Solution:
+
+SELECT name, salary
+FROM employees
+WHERE salary > 45000;
+
+-- Explanation:
+-- The > operator means "greater than".
+-- Only employees with salary above 45000 are displayed.
+
+
+-- =========================================================
+-- PROBLEM 5
+-- Sort employees by age
+-- =========================================================
+
+-- Problem:
+-- Display employees from youngest to oldest.
+
+-- Solution:
+
+SELECT name, age
+FROM employees
+ORDER BY age ASC;
+
+-- Explanation:
+-- ORDER BY is used to sort the result.
+-- ASC means ascending order.
+
+
+-- =========================================================
+-- PROBLEM 6
+-- Display highest salary first
+-- =========================================================
+
+-- Problem:
+-- Sort employees by salary from highest to lowest.
+
+-- Solution:
+
+SELECT name, salary
+FROM employees
+ORDER BY salary DESC;
+
+-- Explanation:
+-- DESC means descending order.
+-- The highest salary appears first.
+
+
+-- =========================================================
+-- PROBLEM 7
+-- Display first 3 employees
+-- =========================================================
+
+-- Problem:
+-- Show only the first 3 employees.
+
+-- Solution:
+
+SELECT *
+FROM employees
+LIMIT 3;
+
+-- Explanation:
+-- LIMIT 3 restricts the output to 3 rows.
+
+
+-- =========================================================
+-- DAY 1 TOPICS
+-- =========================================================
+
+-- SELECT
+-- WHERE
+-- ORDER BY
+-- ASC
+-- DESC
+-- LIMIT
